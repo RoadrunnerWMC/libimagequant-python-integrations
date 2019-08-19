@@ -37,12 +37,11 @@ Each submodule contains two functions, used to convert to and from the
 
 (Replace `OtherImageClass` with the appropriate other image class.)
 
-<small><a name="skimage">1</a>:
+<a name="skimage">1</a>:
 Give `to_liq()` an RGBA image (numpy array of shape `(y, x, 4)`, with
 uint8-type elements) as its "image" argument. `from_liq()` returns two numpy
 arrays: one with pixel data (shape `(y, x, 1)`, uint8-type elements), and one
 with the RGBA color palette (shape `(n, 4)`, uint8-type elements).
-</small>
 
 
 License

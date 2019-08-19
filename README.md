@@ -22,7 +22,7 @@ indicated classes:
 * `libimagequant_integrations.PIL` (for Pillow's `PIL.Image.Image`)
 * `libimagequant_integrations.PySide2` (for `PySide2.QtGui.QImage`)
 * `libimagequant_integrations.PyQt5` (for `PyQt5.QtGui.QImage`)
-* `libimagequant_integrations.skimage` (for scikit-image numpy arrays<sup>[1](#skimage)</sup>)
+* `libimagequant_integrations.skimage` (for scikit-image numpy arrays<sup>[†](#skimage)</sup>)
 
 I suggest you import using (for example)
 `import libimagequant_integrations.PyQt5 as liq_PyQt5`, to avoid typing an
@@ -37,7 +37,7 @@ Each submodule contains two functions, used to convert to and from the
 
 (Replace `OtherImageClass` with the appropriate other image class.)
 
-<a name="skimage">1</a>:
+<sup><a name="skimage">†</a></sup>
 Give `to_liq()` an RGBA image (numpy array of shape `(y, x, 4)`, with
 uint8-type elements) as its "image" argument. `from_liq()` returns two numpy
 arrays: one with pixel data (shape `(y, x, 1)`, uint8-type elements), and one

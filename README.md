@@ -37,6 +37,13 @@ Each submodule contains two functions, used to convert to and from the
 
 (Replace `OtherImageClass` with the appropriate other image class.)
 
+You can check `libimagequant_integration`'s version number using
+`libimagequant_integrations.VERSION` and
+`libimagequant_integrations.VERSION_STR`, which are in the same format as the
+version number constants in the `libimagequant` bindings library itself. The
+version numbers follow semantic versioning. They begin with 1.0.0, and do not
+track libimagequant's version numbers at all.
+
 <sup><a name="pillow">†</a></sup>
 While Pillow claims to support images with RGBA palettes, this feature seems
 extremely buggy, almost to the point of being completely unusable. Therefore,
@@ -49,13 +56,6 @@ Give `to_liq()` an RGBA image (numpy array of shape `(y, x, 4)`, with
 uint8-type elements) as its "image" argument. `from_liq()` returns two numpy
 arrays: one with pixel data (shape `(y, x, 1)`, uint8-type elements), and one
 with the RGBA color palette (shape `(n, 4)`, uint8-type elements).
-
-You can check `libimagequant_integration`'s version number using
-`libimagequant_integrations.VERSION` and
-`libimagequant_integrations.VERSION_STR`, which are in the same format as the
-version number constants in the `libimagequant` bindings library itself. The
-version numbers follow semantic versioning. They begin with 1.0.0, and do not
-track libimagequant's version numbers at all.
 
 License
 -------

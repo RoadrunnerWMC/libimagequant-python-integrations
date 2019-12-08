@@ -124,6 +124,7 @@ def test_PyQt5():
 
 
 @pytest.mark.skipif(PySide2 is None, reason='PySide2 is not available')
+@pytest.mark.xfail(reason='QImage has been almost completely broken in PySide2 for years')
 def test_PySide2():
     """
     Test libimagequant_integrations.PySide2

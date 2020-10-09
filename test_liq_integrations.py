@@ -25,7 +25,7 @@ except ImportError:
     PyQt5 = None
 
 try:
-    import skimage
+    import skimage.io
     import numpy as np
     import libimagequant_integrations.skimage as liq_skimage
 except ImportError:

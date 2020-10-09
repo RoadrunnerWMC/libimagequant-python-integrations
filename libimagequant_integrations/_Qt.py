@@ -28,6 +28,6 @@ def from_liq(QtGui, result, image):
                            image.height,
                            image.width,
                            QtGui.QImage.Format_Indexed8)
-    out_img.setColorTable([QtGui.QColor(*color).rgb() for color in result.get_palette()])
+    out_img.setColorTable([QtGui.QColor(*color).rgba() for color in result.get_palette()])
 
     return out_img

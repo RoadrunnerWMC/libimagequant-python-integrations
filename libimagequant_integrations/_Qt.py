@@ -15,7 +15,7 @@ def to_liq(QtGui, image, attr, is_pyqt):
     if is_pyqt:
         rgba_data = rgba_data.asstring(image.byteCount())
 
-    return attr.create_rgba(rgba_data, image.width(), image.height(), 1.0)
+    return attr.create_rgba(rgba_data, image.width(), image.height(), 0)
 
 
 def from_liq(QtGui, result, image):

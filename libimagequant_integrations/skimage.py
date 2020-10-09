@@ -10,7 +10,7 @@ def to_liq(image: np.ndarray, attr: liq.Attr) -> liq.Image:
     if image.shape[2] != 4:
         raise ValueError('scikit-image array must be in RGBA format')
 
-    return attr.create_rgba(skimage.img_as_ubyte(image), image.shape[1], image.shape[0], 1.0)
+    return attr.create_rgba(skimage.img_as_ubyte(image), image.shape[1], image.shape[0], 0)
 
 
 def from_liq(result: liq.Result, image: liq.Image) -> np.ndarray:

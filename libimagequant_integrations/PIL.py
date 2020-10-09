@@ -10,7 +10,7 @@ def to_liq(image: PIL.Image.Image, attr: liq.Attr) -> liq.Image:
     if image.mode != 'RGBA':
         image = image.convert('RGBA')
 
-    return attr.create_rgba(image.tobytes(), image.width, image.height, image.info.get('gamma', 1.0))
+    return attr.create_rgba(image.tobytes(), image.width, image.height, image.info.get('gamma', 0))
 
 
 def from_liq(result: liq.Result, image: liq.Image) -> PIL.Image.Image:

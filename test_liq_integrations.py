@@ -1,3 +1,4 @@
+import io
 import warnings
 
 # NOTE: importing PySide2 before anything else fixes some weird linking
@@ -30,6 +31,12 @@ try:
     import libimagequant_integrations.skimage as liq_skimage
 except ImportError:
     skimage = None
+
+try:
+    import png
+    import libimagequant_integrations.png as liq_png
+except ImportError:
+    png = None
 
 import libimagequant as liq
 import pytest
@@ -172,6 +179,56 @@ def test_skimage():
 
         for (x, y), expected in points:
             r, g, b, a = sk_out_pal[sk_out_px[y, x][0]]
+            print((x, y), expected, (r, g, b, a))
+            assert near(r, expected[0])
+            assert near(g, expected[1])
+            assert near(b, expected[2])
+            assert near(a, expected[3])
+
+    test_against(TEST_IMAGE_1, TEST_POINTS_1)
+    test_against(TEST_IMAGE_2, TEST_POINTS_2)
+
+
+@pytest.mark.skipif(skimage is None, reason='PyPNG is not available')
+def test_png():
+    """
+    Test libimagequant_integrations.png
+    """
+    def test_against(image_filename, points):
+        png_in_check = png.Reader(filename=image_filename)
+
+        width, height, data, info = png_in_check.read_flat()
+
+        for pos, expected in points:
+            start = (pos[1] * width + pos[0]) * 4
+            assert data[start+0] == expected[0]
+            assert data[start+1] == expected[1]
+            assert data[start+2] == expected[2]
+            assert data[start+3] == expected[3]
+
+        attr = liq.Attr()
+        png_in = png.Reader(filename=image_filename)
+        img = liq_png.to_liq(png_in, attr)
+
+        result = img.quantize(attr)
+        png_out, data = liq_png.from_liq(result, img)
+
+        temp_output_buffer = io.BytesIO()
+        png_out.write_array(temp_output_buffer, data)
+
+        temp_output_buffer.seek(0)
+        rereader_check = png.Reader(file=temp_output_buffer)
+        _, _, _, info = rereader_check.read()
+
+        assert info.get('palette')
+
+        temp_output_buffer.seek(0)
+        rereader = png.Reader(file=temp_output_buffer)
+        _, _, data, _ = rereader.asRGBA()
+        data = list(data)  # so we can index into it
+
+        for (x, y), expected in points:
+            r, g, b, a = data[y][x*4 : x*4+4]
             print((x, y), expected, (r, g, b, a))
             assert near(r, expected[0])
             assert near(g, expected[1])

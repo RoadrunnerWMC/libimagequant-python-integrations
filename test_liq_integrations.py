@@ -1,13 +1,16 @@
+import importlib
 import io
 import warnings
 
-# NOTE: importing PySide2 before anything else fixes some weird linking
-# errors I'm experiencing, for some reason
-try:
-    import PySide2.QtGui
-    import libimagequant_integrations.PySide2 as liq_PySide2
-except ImportError:
-    PySide2 = None
+# If you import more than one Qt bindings lib into a single process, and
+# one of them is PySide, it tends to segfault. So I'm setting this up
+# such that you can install pytest-forked and run the tests with the
+# --forked CLI flag to avoid that problem.
+
+HavePyQt5 = (importlib.util.find_spec('PyQt5') is not None)
+HavePyQt6 = (importlib.util.find_spec('PyQt6') is not None)
+HavePySide2 = (importlib.util.find_spec('PySide2') is not None)
+HavePySide6 = (importlib.util.find_spec('PySide6') is not None)
 
 try:
     # PIL internally raises some DeprecationWarnings upon import --
@@ -18,12 +21,6 @@ try:
         import libimagequant_integrations.PIL as liq_PIL
 except ImportError:
     PIL = None
-
-try:
-    import PyQt5.QtGui
-    import libimagequant_integrations.PyQt5 as liq_PyQt5
-except ImportError:
-    PyQt5 = None
 
 try:
     import skimage.io
@@ -105,7 +102,7 @@ def test_PIL():
 
 def run_qt_test(liq_Qt, QtGui):
     """
-    Test PyQt5 or PySide2
+    Test a Qt bindings library (PyQt5, PyQt6, PySide2, PySide6)
     """
     app = QtGui.QGuiApplication([])
 
@@ -122,9 +119,9 @@ def run_qt_test(liq_Qt, QtGui):
         result = img.quantize(attr)
         q_out = liq_Qt.from_liq(result, img)
 
-        assert q_out.format() == QtGui.QImage.Format_Indexed8
+        assert q_out.format() == QtGui.QImage.Format.Format_Indexed8
 
-        q_out_rgba = q_out.convertToFormat(QtGui.QImage.Format_ARGB32)
+        q_out_rgba = q_out.convertToFormat(QtGui.QImage.Format.Format_ARGB32)
 
         for pos, expected in points:
             qcolor = q_out_rgba.pixelColor(*pos)
@@ -139,21 +136,46 @@ def run_qt_test(liq_Qt, QtGui):
     test_against(TEST_IMAGE_2, TEST_POINTS_2)
 
 
-@pytest.mark.skipif(PyQt5 is None, reason='PyQt5 is not available')
+@pytest.mark.skipif(not HavePyQt5, reason='PyQt5 is not available')
 def test_PyQt5():
     """
-    Test libimagequant_integrations.PyQt
+    Test libimagequant_integrations.PyQt5
     """
-    run_qt_test(liq_PyQt5, PyQt5.QtGui)
+    from PyQt5 import QtGui
+    import libimagequant_integrations.PyQt5 as liq_PyQt5
+    run_qt_test(liq_PyQt5, QtGui)
 
 
-@pytest.mark.skipif(PySide2 is None, reason='PySide2 is not available')
-@pytest.mark.xfail(reason='QImage has been almost completely broken in PySide2 for years')
+@pytest.mark.skipif(not HavePyQt6, reason='PyQt6 is not available')
+def test_PyQt6():
+    """
+    Test libimagequant_integrations.PyQt6
+    """
+    from PyQt6 import QtGui
+    import libimagequant_integrations.PyQt6 as liq_PyQt6
+    run_qt_test(liq_PyQt6, QtGui)
+
+
+@pytest.mark.skipif(not HavePySide2, reason='PySide2 is not available')
+@pytest.mark.xfail(reason='QImage has been almost completely broken in PySide for years')
 def test_PySide2():
     """
     Test libimagequant_integrations.PySide2
     """
-    run_qt_test(liq_PySide2, PySide2.QtGui)
+    from PySide2 import QtGui
+    import libimagequant_integrations.PySide2 as liq_PySide2
+    run_qt_test(liq_PySide2, QtGui)
+
+
+@pytest.mark.skipif(not HavePySide6, reason='PySide6 is not available')
+@pytest.mark.xfail(reason='QImage has been almost completely broken in PySide for years')
+def test_PySide6():
+    """
+    Test libimagequant_integrations.PySide6
+    """
+    from PySide6 import QtGui
+    import libimagequant_integrations.PySide6 as liq_PySide6
+    run_qt_test(liq_PySide6, QtGui)
 
 
 @pytest.mark.skipif(skimage is None, reason='scikit-image is not available')

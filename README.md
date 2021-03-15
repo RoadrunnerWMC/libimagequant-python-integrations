@@ -21,7 +21,9 @@ indicated classes:
 
 * `libimagequant_integrations.PIL` (for Pillow's `PIL.Image.Image`[*](#pillow))
 * `libimagequant_integrations.PySide2` (for `PySide2.QtGui.QImage`)
+* `libimagequant_integrations.PySide6` (for `PySide6.QtGui.QImage`)
 * `libimagequant_integrations.PyQt5` (for `PyQt5.QtGui.QImage`)
+* `libimagequant_integrations.PyQt6` (for `PyQt6.QtGui.QImage`)
 * `libimagequant_integrations.skimage` (for scikit-image numpy arrays<sup>[†](#skimage)</sup>)
 * `libimagequant_integrations.png` (for PyPNG `png.Reader` and `png.Writer`<sup>[‡](#pypng)</sup>)
 
